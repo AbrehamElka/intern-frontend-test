@@ -1,19 +1,19 @@
 // app/dashboard/myposts/create-post/page.tsx
-'use client'; // This page needs to be a Client Component for form handling
+"use client"; // This page needs to be a Client Component for form handling
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link'; // For the back button
-import { Button } from '@/components/ui/button'; // Assuming you have this button component
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link"; // For the back button
+import { Button } from "@/components/ui/button"; // Assuming you have this button component
 
 // IMPORTANT: This ensures the page is always rendered dynamically on the server
 // before hydration, and prevents Next.js from caching a static version of this protected page.
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default function CreatePostPage() {
   const router = useRouter();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -34,41 +34,45 @@ export default function CreatePostPage() {
 
     // Basic validation
     if (!title.trim()) {
-      setError('Post title cannot be empty.');
+      setError("Post title cannot be empty.");
       setLoading(false);
       return;
     }
 
     try {
       const response = await fetch(`${nestJsApiUrl}/posts`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include', // Crucial for sending the HTTP-only cookie
+        credentials: "include", // Crucial for sending the HTTP-only cookie
         body: JSON.stringify({ title, description }),
       });
 
       if (response.ok) {
-        setSuccess('Post created successfully!');
+        setSuccess("Post created successfully!");
         // Optionally clear the form
-        setTitle('');
-        setDescription('');
+        setTitle("");
+        setDescription("");
         // Redirect to 'My Posts' page after a short delay or immediately
         setTimeout(() => {
-          router.push('/dashboard/myposts');
+          router.push("/dashboard/myposts");
         }, 1500); // Give user a moment to see success message
       } else if (response.status === 401 || response.status === 403) {
         // Unauthorized or Forbidden - redirect to login
-        console.error('Authentication error creating post. Redirecting to sign-in.');
-        router.push('/auth/signin');
+        console.error(
+          "Authentication error creating post. Redirecting to sign-in."
+        );
+        router.push("/auth/signin");
       } else {
         const errorData = await response.json();
-        setError(errorData.message || 'Failed to create post.');
+        setError(errorData.message || "Failed to create post.");
       }
     } catch (err: any) {
-      console.error('Error creating post:', err);
-      setError(err.message || 'An unexpected error occurred during post creation.');
+      console.error("Error creating post:", err);
+      setError(
+        err.message || "An unexpected error occurred during post creation."
+      );
     } finally {
       setLoading(false);
     }
@@ -88,7 +92,10 @@ export default function CreatePostPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Title
             </label>
             <input
@@ -103,7 +110,10 @@ export default function CreatePostPage() {
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Description (Optional)
             </label>
             <textarea
@@ -117,13 +127,19 @@ export default function CreatePostPage() {
           </div>
 
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <div
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+              role="alert"
+            >
               <span className="block sm:inline">{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+            <div
+              className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+              role="alert"
+            >
               <span className="block sm:inline">{success}</span>
             </div>
           )}
@@ -133,7 +149,7 @@ export default function CreatePostPage() {
             disabled={loading}
             className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50"
           >
-            {loading ? 'Creating Post...' : 'Create Post'}
+            {loading ? "Creating Post..." : "Create Post"}
           </Button>
         </form>
       </div>

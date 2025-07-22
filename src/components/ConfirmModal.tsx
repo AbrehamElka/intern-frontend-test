@@ -1,8 +1,8 @@
 // components/ConfirmModal.tsx
-'use client';
+"use client";
 
-import React from 'react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Button } from "@/components/ui/button";
 
 interface ConfirmModalProps {
   isOpen: boolean;
@@ -21,8 +21,8 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onConfirm,
   title,
   message,
-  confirmButtonText = 'Confirm',
-  cancelButtonText = 'Cancel',
+  confirmButtonText = "Confirm",
+  cancelButtonText = "Cancel",
   isConfirming = false,
 }) => {
   if (!isOpen) {
@@ -48,7 +48,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             disabled={isConfirming}
             className="bg-red-600 hover:bg-red-700 text-white disabled:opacity-50"
           >
-            {isConfirming ? 'Deleting...' : confirmButtonText}
+            {isConfirming ? "Deleting..." : confirmButtonText}
           </Button>
         </div>
       </div>

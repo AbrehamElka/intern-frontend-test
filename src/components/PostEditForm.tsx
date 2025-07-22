@@ -1,9 +1,9 @@
 // components/PostEditForm.tsx
-'use client'; // This is a Client Component
+"use client"; // This is a Client Component
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button'; // Assuming you have this button component
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button"; // Assuming you have this button component
 
 // Define a type for your Post (matching your backend/Prisma schema)
 interface Post {
@@ -27,7 +27,7 @@ interface PostEditFormProps {
 export const PostEditForm: React.FC<PostEditFormProps> = ({ initialPost }) => {
   const router = useRouter();
   const [title, setTitle] = useState(initialPost.title);
-  const [description, setDescription] = useState(initialPost.description || ''); // Handle potential null/undefined description
+  const [description, setDescription] = useState(initialPost.description || ""); // Handle potential null/undefined description
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -47,37 +47,41 @@ export const PostEditForm: React.FC<PostEditFormProps> = ({ initialPost }) => {
     }
 
     if (!title.trim()) {
-      setError('Post title cannot be empty.');
+      setError("Post title cannot be empty.");
       setLoading(false);
       return;
     }
 
     try {
       const response = await fetch(`${nestJsApiUrl}/posts/${initialPost.id}`, {
-        method: 'PATCH', // Use PATCH for updating
+        method: "PATCH", // Use PATCH for updating
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include', // Crucial for sending the HTTP-only cookie
+        credentials: "include", // Crucial for sending the HTTP-only cookie
         body: JSON.stringify({ title, description }),
       });
 
       if (response.ok) {
-        setSuccess('Post updated successfully!');
+        setSuccess("Post updated successfully!");
         // Optionally redirect to the updated post's view page or myposts list
         setTimeout(() => {
           router.push(`/dashboard/myposts/${initialPost.id}`); // Redirect to view page
         }, 1500);
       } else if (response.status === 401 || response.status === 403) {
-        console.error('Authentication error updating post. Redirecting to sign-in.');
-        router.push('/auth/signin');
+        console.error(
+          "Authentication error updating post. Redirecting to sign-in."
+        );
+        router.push("/auth/signin");
       } else {
         const errorData = await response.json();
-        setError(errorData.message || 'Failed to update post.');
+        setError(errorData.message || "Failed to update post.");
       }
     } catch (err: any) {
-      console.error('Error updating post:', err);
-      setError(err.message || 'An unexpected error occurred during post update.');
+      console.error("Error updating post:", err);
+      setError(
+        err.message || "An unexpected error occurred during post update."
+      );
     } finally {
       setLoading(false);
     }
@@ -86,7 +90,10 @@ export const PostEditForm: React.FC<PostEditFormProps> = ({ initialPost }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Title
         </label>
         <input
@@ -101,7 +108,10 @@ export const PostEditForm: React.FC<PostEditFormProps> = ({ initialPost }) => {
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Description (Optional)
         </label>
         <textarea
@@ -115,13 +125,19 @@ export const PostEditForm: React.FC<PostEditFormProps> = ({ initialPost }) => {
       </div>
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
           <span className="block sm:inline">{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+        <div
+          className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
           <span className="block sm:inline">{success}</span>
         </div>
       )}
@@ -131,7 +147,7 @@ export const PostEditForm: React.FC<PostEditFormProps> = ({ initialPost }) => {
         disabled={loading}
         className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50"
       >
-        {loading ? 'Saving Changes...' : 'Save Changes'}
+        {loading ? "Saving Changes..." : "Save Changes"}
       </Button>
     </form>
   );

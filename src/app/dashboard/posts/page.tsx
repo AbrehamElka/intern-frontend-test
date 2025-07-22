@@ -1,13 +1,13 @@
 // app/dashboard/posts/page.tsx
-import React from 'react';
-import { redirect } from 'next/navigation'; // For error handling/redirects
-import { headers } from 'next/headers'; // To forward cookies for server-side fetch
-import AllPostsCard from '@/components/AllPostsCard'; // Import the new PostCard component
-import Link from 'next/link';
-import { Button } from '@/components/ui/button'
+import React from "react";
+import { redirect } from "next/navigation"; // For error handling/redirects
+import { headers } from "next/headers"; // To forward cookies for server-side fetch
+import AllPostsCard from "@/components/AllPostsCard"; // Import the new PostCard component
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 // Ensure this page is always rendered dynamically on the server
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 // Define a type for your Post (reusing the interface)
 interface Post {
@@ -27,8 +27,8 @@ interface Post {
 // Helper function to fetch all posts data on the server
 async function getAllPostsData(): Promise<Post[]> {
   const requestHeaders = await headers();
-const cookieHeader = requestHeaders.get('cookie');
- // Still forward cookies, even if API isn't strictly protected, for consistency
+  const cookieHeader = requestHeaders.get("cookie");
+  // Still forward cookies, even if API isn't strictly protected, for consistency
 
   const nestJsApiUrl = process.env.NEXT_PUBLIC_NESTJS_API_URL;
 
@@ -38,18 +38,18 @@ const cookieHeader = requestHeaders.get('cookie');
     // In a real application, you might throw an error or show a global message
     // For this specific 'all posts' page, if it's meant to be public, you might not redirect
     // but rather display a system error message. For now, let's keep the redirect as a robust fallback.
-    redirect('/auth/signin'); // Or redirect to an error page
+    redirect("/auth/signin"); // Or redirect to an error page
   }
 
   const fetchOptions: RequestInit = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     // We send credentials just in case the API has partial protection or requires it
     // but for a truly public endpoint, it might not be strictly necessary.
-    credentials: 'include',
-    cache: 'no-store', // Always fetch fresh data
+    credentials: "include",
+    cache: "no-store", // Always fetch fresh data
   };
 
   if (cookieHeader) {
@@ -63,17 +63,21 @@ const cookieHeader = requestHeaders.get('cookie');
     const response = await fetch(`${nestJsApiUrl}/posts`, fetchOptions); // Fetch all posts
 
     if (response.ok) {
-      return await response.json() as Post[];
+      return (await response.json()) as Post[];
     } else if (response.status === 401 || response.status === 403) {
       // If the public API somehow returns 401/403 (e.g., global auth required)
-      console.error(`Authentication error fetching all posts. Status: ${response.status}. Redirecting.`);
-      redirect('/auth/signin');
+      console.error(
+        `Authentication error fetching all posts. Status: ${response.status}. Redirecting.`
+      );
+      redirect("/auth/signin");
     } else {
       const errorData = await response.json();
       throw new Error(errorData.message || `Failed to fetch all posts.`);
     }
   } catch (err: any) {
-    throw new Error(err.message || `An unexpected error occurred while fetching all posts.`);
+    throw new Error(
+      err.message || `An unexpected error occurred while fetching all posts.`
+    );
   }
 }
 
@@ -91,7 +95,9 @@ export default async function PostsPage() {
     return (
       <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-100 px-4 py-8">
         <div className="text-center p-8 bg-white rounded-2xl shadow-lg">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Error Loading Posts</h2>
+          <h2 className="text-2xl font-bold text-red-600 mb-4">
+            Error Loading Posts
+          </h2>
           <p className="text-gray-700 mb-6">{error}</p>
           {/* You might offer a retry button or link back to dashboard/home */}
           <Link href="/dashboard">

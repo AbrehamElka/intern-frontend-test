@@ -1,7 +1,7 @@
 // components/AllPostsCard.tsx
-import React from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button'; // Assuming you have this
+import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button"; // Assuming you have this
 
 // Define a type for your Post (matching your backend/Prisma schema)
 interface Post {
@@ -26,23 +26,26 @@ const AllPostsCard: React.FC<AllPostsCardProps> = ({ post }) => {
   // Simple date formatting for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between h-full">
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">{post.title}</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mb-2">
+          {post.title}
+        </h3>
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
           {post.description}
         </p>
       </div>
       <div className="flex justify-between items-center text-xs text-gray-500 mt-4">
-        <span>{post.author.name || post.author.email}</span> {/* Display author name or email */}
+        <span>{post.author.name || post.author.email}</span>{" "}
+        {/* Display author name or email */}
         <span>{formatDate(post.createdAt)}</span>
       </div>
       <div className="flex gap-2 mt-4">

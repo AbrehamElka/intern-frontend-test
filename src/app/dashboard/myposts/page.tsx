@@ -1,13 +1,13 @@
 // app/dashboard/myposts/page.tsx
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react'; // Add useCallback
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import { ConfirmModal } from '@/components/ConfirmModal'; // Import the new modal component
+import React, { useState, useEffect, useCallback } from "react"; // Add useCallback
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { ConfirmModal } from "@/components/ConfirmModal"; // Import the new modal component
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 interface Post {
   id: number;
@@ -32,17 +32,19 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post, onDeleteClick }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between h-full">
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">{post.title}</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mb-2">
+          {post.title}
+        </h3>
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
           {post.description}
         </p>
@@ -100,26 +102,28 @@ export default function MyPostsPage() {
 
     try {
       const response = await fetch(`${nestJsApiUrl}/posts/my`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (response.ok) {
         const data: Post[] = await response.json();
         setPosts(data);
       } else if (response.status === 401 || response.status === 403) {
-        console.error('Authentication error fetching posts. Redirecting to sign-in.');
-        router.push('/auth/signin');
+        console.error(
+          "Authentication error fetching posts. Redirecting to sign-in."
+        );
+        router.push("/auth/signin");
       } else {
         const errorData = await response.json();
-        setError(errorData.message || 'Failed to fetch posts.');
+        setError(errorData.message || "Failed to fetch posts.");
       }
     } catch (err: any) {
-      console.error('Error fetching posts:', err);
-      setError(err.message || 'An unexpected error occurred.');
+      console.error("Error fetching posts:", err);
+      setError(err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -153,32 +157,35 @@ export default function MyPostsPage() {
 
     try {
       const response = await fetch(`${nestJsApiUrl}/posts/${postToDelete}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (response.ok) {
         // If deletion is successful, update the posts list by filtering out the deleted one
-        setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postToDelete));
+        setPosts((prevPosts) =>
+          prevPosts.filter((post) => post.id !== postToDelete)
+        );
         handleCloseDeleteModal(); // Close modal on success
       } else if (response.status === 401 || response.status === 403) {
-        console.error('Authorization error deleting post. Redirecting to sign-in.');
-        router.push('/auth/signin');
+        console.error(
+          "Authorization error deleting post. Redirecting to sign-in."
+        );
+        router.push("/auth/signin");
       } else {
         const errorData = await response.json();
-        setError(errorData.message || 'Failed to delete post.');
+        setError(errorData.message || "Failed to delete post.");
       }
     } catch (err: any) {
-      console.error('Error deleting post:', err);
-      setError(err.message || 'An unexpected error occurred during deletion.');
+      console.error("Error deleting post:", err);
+      setError(err.message || "An unexpected error occurred during deletion.");
     } finally {
       setIsDeleting(false); // Reset deleting state
     }
   };
-
 
   if (loading) {
     return (
@@ -188,7 +195,8 @@ export default function MyPostsPage() {
     );
   }
 
-  if (error && !isModalOpen) { // Display page-level error if modal is not open
+  if (error && !isModalOpen) {
+    // Display page-level error if modal is not open
     return (
       <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-100">
         <p className="text-lg text-red-500">Error: {error}</p>
@@ -209,7 +217,9 @@ export default function MyPostsPage() {
 
       {posts.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-xl text-gray-600">You haven't created any posts yet.</p>
+          <p className="text-xl text-gray-600">
+            You haven't created any posts yet.
+          </p>
           <Link href="/dashboard/myposts/create-post">
             <Button className="mt-6 bg-purple-600 hover:bg-purple-700 text-white font-semibold shadow-md">
               Create Your First Post
@@ -219,7 +229,11 @@ export default function MyPostsPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} onDeleteClick={handleOpenDeleteModal} />
+            <PostCard
+              key={post.id}
+              post={post}
+              onDeleteClick={handleOpenDeleteModal}
+            />
           ))}
         </div>
       )}
